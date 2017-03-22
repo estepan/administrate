@@ -24,7 +24,13 @@ module Administrate
     @@javascripts = []
     @@stylesheets = []
 
-    Engine.config.assets.precompile << /\.(?:svg)\z/
+    # fix for: https://github.com/twbs/bootstrap-sass/issues/960
++   # regex no longer supported by assets.precompile
++   # sprockets-rails 3 tracks down the calls to `font_path` and `image_path`
++   # and automatically precompiles the referenced assets.
++   unless Sprockets::Rails::VERSION.starts_with?('3')
++     Engine.config.assets.precompile << /\.(?:svg)\z/
++   end
 
     def self.add_javascript(script)
       @@javascripts << script
